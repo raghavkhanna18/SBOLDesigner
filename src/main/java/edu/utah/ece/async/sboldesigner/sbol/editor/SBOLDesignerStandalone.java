@@ -15,12 +15,10 @@
 
 package edu.utah.ece.async.sboldesigner.sbol.editor;
 
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -28,6 +26,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.Base64;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -41,10 +41,10 @@ import javax.swing.UIManager;
 import org.sbolstandard.core2.SBOLValidationException;
 
 import edu.utah.ece.async.sboldesigner.sbol.editor.io.FileDocumentIO;
-
+import netscape.javascript.JSObject;
 /**
  * The JFrame shown for the standalone SBOLDesigner application
- * 
+ *
  * @author Michael Zhang
  *
  */
@@ -58,7 +58,7 @@ public class SBOLDesignerStandalone extends JFrame {
 		// creates the panel with this frame so title can be set
 		panel = new SBOLDesignerPanel(this);
 		// Only ask for a URI prefix if the current one is
-		// "http://www.dummy.org" 
+		// "http://www.dummy.org"
 		panel.newPart(SBOLEditorPreferences.INSTANCE.getUserInfo().getURI().toString().equals("http://www.dummy.org/"),
 				true);
 
@@ -91,13 +91,43 @@ public class SBOLDesignerStandalone extends JFrame {
 		frame.setLocationRelativeTo(null);
 
 		if (args.length > 0) {
-			try {
-				File file = new File(args[0]);
-				Preferences.userRoot().node("path").put("path", file.getPath());
-				frame.panel.openDocument(new FileDocumentIO(false));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+            if ("--webswing".equals(args[0])) {
+                try {
+                    String sbolString = getSBOLStringFromWebSwing();
+                    System.out.println(sbolString);
+                    try {
+                        if(sbolString != null) {
+                            String path = "/root/webswing-examples-20.1.3/sandbox/anonym/upload";
+                            String fileName = "test.xml";
+                            File theDir = new File(path);
+                            if (!theDir.exists()){
+                                theDir.mkdirs();
+                            }
+                            File newXMLFile = new File(path + "/"+fileName);
+                            FileWriter fw = new FileWriter(newXMLFile);
+                            fw.write(sbolString);
+                            fw.close();
+                            Preferences.userRoot().node("path").put("path", newXMLFile.getPath());
+                            frame.panel.openDocument(new FileDocumentIO(false));
+                        }
+                    } catch (Exception iox) {
+                        //do stuff with exception
+                        iox.printStackTrace();
+                    }
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+            } else {
+                System.out.println("In else");
+                try {
+                    File file = new File(args[0]);
+                    Preferences.userRoot().node("path").put("path", file.getPath());
+                    frame.panel.openDocument(new FileDocumentIO(false));
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
 		}
 	}
 
@@ -146,4 +176,16 @@ public class SBOLDesignerStandalone extends JFrame {
 			Logger.getAnonymousLogger().severe(e.getMessage());
 		}
 	}
+
+	private static String getSBOLStringFromWebSwing(){
+        JSObject global = JSObject.getWindow(null);
+        Object res = global.eval("test()");
+        assert res instanceof String;
+        String resAsString = (String) res;
+        System.out.println(resAsString);
+        byte[] encoded = resAsString.getBytes();
+        byte[] decoded = Base64.getDecoder().decode(encoded);
+        String decodedXML = new String(decoded);
+        return decodedXML;
+    }
 }

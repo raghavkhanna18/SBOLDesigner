@@ -22,7 +22,11 @@ import java.awt.BorderLayout;
 import java.io.*;
 import java.net.URI;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -38,6 +42,7 @@ import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
 
+import netscape.javascript.JSObject;
 import org.sbolstandard.core2.ComponentDefinition;
 import org.sbolstandard.core2.SBOLConversionException;
 import org.sbolstandard.core2.SBOLDocument;
@@ -66,7 +71,7 @@ import edu.utah.ece.async.sboldesigner.versioning.PersonInfo;
 
 /**
  * The brains behind SBOLDesigner
- * 
+ *
  * @author Evren Sirin
  * @author Michael Zhang
  */
@@ -356,13 +361,13 @@ public class SBOLDesignerPanel extends JPanel {
 	    myPanel.add(new JLabel("Email:"));
 	    myPanel.add(emailField);
 
-	    int result = JOptionPane.showConfirmDialog(null, myPanel, 
+	    int result = JOptionPane.showConfirmDialog(null, myPanel,
 	               "Author Info", JOptionPane.OK_CANCEL_OPTION);
 	    if (result == JOptionPane.OK_OPTION) {
 	         System.out.println("x value: " + nameField.getText());
 	         System.out.println("y value: " + emailField.getText());
 	    }
-	    String name; 
+	    String name;
 	    String email;
 		if (Strings.isNullOrEmpty(nameField.getText()) && (Strings.isNullOrEmpty(emailField.getText())) || result == JOptionPane.CANCEL_OPTION) {
 			name = "dummy";
@@ -461,6 +466,16 @@ public class SBOLDesignerPanel extends JPanel {
 				file = new File(file + ".xml");
 			}
 			SBOLWriter.write(doc, new FileOutputStream(file), SBOLDocument.RDFV1);
+            try{
+                String fileString = new String(Files.readAllBytes(Paths.get(file.getPath())), StandardCharsets.UTF_8);
+                String base64Encoded = Base64.getEncoder().encodeToString(fileString.getBytes());
+                System.out.println(base64Encoded);
+                JSObject global = JSObject.getWindow(null);
+                Object res = global.eval("outOfSBOLDesigner('" + base64Encoded + "');");
+            } catch (Exception e){
+                System.out.println("Error while updating frontend");
+                e.printStackTrace();
+            }
 			break;
 		default:
 			break;
@@ -570,7 +585,7 @@ public class SBOLDesignerPanel extends JPanel {
 				updateEnabledButtons(true);
 				return false;
 			} else {
-				selection = 0;
+				selection = 1;
 			}
 		} else {
 			selection = chooseSaveOption();
@@ -616,6 +631,16 @@ public class SBOLDesignerPanel extends JPanel {
 
 		SBOLWriter.write(doc, file);
 		updateEnabledButtons(false);
+        try{
+            String fileString = new String(Files.readAllBytes(Paths.get(file.getPath())), StandardCharsets.UTF_8);
+            String base64Encoded = Base64.getEncoder().encodeToString(fileString.getBytes());
+            System.out.println(base64Encoded);
+            JSObject global = JSObject.getWindow(null);
+            Object res = global.eval("outOfSBOLDesigner('" + base64Encoded + "');");
+        } catch (Exception e){
+            System.out.println("Error while updating frontend");
+            e.printStackTrace();
+        }
 		return true;
 	}
 
