@@ -42,7 +42,7 @@ import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
 
-import netscape.javascript.JSObject;
+//import netscape.javascript.JSObject;
 import org.sbolstandard.core2.ComponentDefinition;
 import org.sbolstandard.core2.SBOLConversionException;
 import org.sbolstandard.core2.SBOLDocument;
@@ -470,8 +470,8 @@ public class SBOLDesignerPanel extends JPanel {
                 String fileString = new String(Files.readAllBytes(Paths.get(file.getPath())), StandardCharsets.UTF_8);
                 String base64Encoded = Base64.getEncoder().encodeToString(fileString.getBytes());
                 System.out.println(base64Encoded);
-                JSObject global = JSObject.getWindow(null);
-                Object res = global.eval("outOfSBOLDesigner('" + base64Encoded + "');");
+//                JSObject global = JSObject.getWindow(null);
+//                Object res = global.eval("outOfSBOLDesigner('" + base64Encoded + "');");
             } catch (Exception e){
                 System.out.println("Error while updating frontend");
                 e.printStackTrace();
@@ -635,8 +635,8 @@ public class SBOLDesignerPanel extends JPanel {
             String fileString = new String(Files.readAllBytes(Paths.get(file.getPath())), StandardCharsets.UTF_8);
             String base64Encoded = Base64.getEncoder().encodeToString(fileString.getBytes());
             System.out.println(base64Encoded);
-            JSObject global = JSObject.getWindow(null);
-            Object res = global.eval("outOfSBOLDesigner('" + base64Encoded + "');");
+//            JSObject global = JSObject.getWindow(null);
+//            Object res = global.eval("outOfSBOLDesigner('" + base64Encoded + "');");
         } catch (Exception e){
             System.out.println("Error while updating frontend");
             e.printStackTrace();

@@ -280,5 +280,15 @@
             <artifactId>plugin</artifactId>
             <version>1.6.0.12</version>
         </dependency>
+        <dependency>
+            <groupId>io.github.vincenzopalazzo</groupId>
+            <artifactId>material-ui-swing</artifactId>
+            <version>1.1.2-rc1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webswing</groupId>
+            <artifactId>webswing-api</artifactId>
+            <version>20.1</version>
+        </dependency>
 	</dependencies>
 </project>

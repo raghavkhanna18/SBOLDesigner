@@ -8,10 +8,10 @@
     <property name="plugin.src" location="plugin/src"/>
     <property name="versioning.src" location="versioning/src"/>
     <property name="servlet.src" location="servlet/src"/>
-	
+
 	<property name="main.class" value="com.clarkparsia.sbol.editor.SBOLDesigner"/>
 	<property name="output.file" location="${build}/${short-plugin-name}-${plugin-version}"/>
-	
+
     <path id="classpath">
         <fileset dir="../GeneiousFiles/lib">
             <include name="GeneiousPublicAPI.jar"/>
@@ -59,7 +59,7 @@
         </jar>
         <echo message="Created ${output.file}.gplugin"/>
     </target>
-	
+
     <target name="designer" depends="compile-designer" description="Builds the standalone SBOL designer">
         <jar jarfile="${output.file}.jar">
 			<manifest>
@@ -80,7 +80,7 @@
             <zipgroupfileset dir="../GeneiousFiles/lib" includes="guava-r09.jar"/>
         </jar>
     </target>
-	
+
     <target name="servlet" depends="compile-servlet" description="Builds the SBOL visual servlet">
 	    <war destfile="${output.file}.war" webxml="servlet/WEB-INF/web.xml">
         	<classes dir="${classes}"/>
@@ -99,7 +99,7 @@
 	            <lib dir="../GeneiousFiles/lib" includes="guava-r09.jar"/>
 	    </war>
     </target>
-	
+
     <target name="compile-plugin" depends="prepare">
         <javac destdir="${classes}" debug="true" target="1.5">
             <classpath refid="classpath"/>

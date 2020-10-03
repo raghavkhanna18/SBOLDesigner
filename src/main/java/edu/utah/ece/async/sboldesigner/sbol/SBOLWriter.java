@@ -1,6 +1,5 @@
 package edu.utah.ece.async.sboldesigner.sbol;
 
-import netscape.javascript.JSObject;
 import org.sbolstandard.core2.SBOLConversionException;
 import org.sbolstandard.core2.SBOLDocument;
 
