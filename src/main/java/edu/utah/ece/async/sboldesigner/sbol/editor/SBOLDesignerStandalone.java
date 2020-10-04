@@ -37,6 +37,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
+import netscape.javascript.JSObject;
 
 import org.sbolstandard.core2.SBOLValidationException;
 
@@ -89,15 +90,18 @@ public class SBOLDesignerStandalone extends JFrame {
 		final SBOLDesignerStandalone frame = new SBOLDesignerStandalone();
 		frame.setVisible(true);
 		frame.setLocationRelativeTo(null);
+        final PingService pingService = new PingService(frame);
+
+        setupWebswing(pingService);
 
 		if (args.length > 0) {
             if ("--webswing".equals(args[0])) {
                 try {
-                    String sbolString = getSBOLStringFromWebSwing();
+                    String sbolString = null;
                     System.out.println(sbolString);
                     try {
                         if(sbolString != null) {
-                            String path = "/root/webswing-examples-20.1.3/sandbox/anonym/upload";
+                            String path = "/root/webswing-examples-20.1.6/sandbox/anonym/upload";
                             String fileName = "test.xml";
                             File theDir = new File(path);
                             if (!theDir.exists()){
@@ -176,6 +180,11 @@ public class SBOLDesignerStandalone extends JFrame {
 			Logger.getAnonymousLogger().severe(e.getMessage());
 		}
 	}
+
+	private static void setupWebswing(PingService pingService){
+	    JSObject global = JSObject.getWindow(null);
+	    global.setMember("pingService", pingService);
+    }
 
 	private static String getSBOLStringFromWebSwing(){
         JSObject global = JSObject.getWindow(null);
