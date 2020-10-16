@@ -35,7 +35,7 @@
             <organizationUrl>http://sbolstandard.org</organizationUrl> <!-- optional -->
         </developer>
     </developers>
-	
+
 	<repositories>
 		<repository>
 			<id>ossrh</id>
@@ -74,7 +74,7 @@
 				</plugins>
 			</build>
 		</profile>
-	</profiles>	
+	</profiles>
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<testSourceDirectory>src/test/java</testSourceDirectory>
@@ -271,5 +271,10 @@
 			<artifactId>libSBOLj</artifactId>
 			<version>2.4.1-SNAPSHOT</version>
 		</dependency>
+        <dependency>
+            <groupId>io.github.vincenzopalazzo</groupId>
+            <artifactId>material-ui-swing</artifactId>
+            <version>1.1.1</version>
+        </dependency>
 	</dependencies>
 </project>
