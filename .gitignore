@@ -9,3 +9,5 @@
 /build.properties
 /obfuscation.map
 /target/
+
+.idea/
